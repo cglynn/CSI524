@@ -298,27 +298,6 @@ function finalFCalculation(str)
 	return result;
 }
 
-function finalFInverse(result)
-{
-		var p = [
-			 16,  7, 20, 21,
-			 29, 12, 28, 17,
-			  1, 15, 23, 26,
-			  5, 18, 31, 10,
-			  2,  8, 24, 14,
-			 32, 27,  3,  9,
-			 19, 13, 30,  6,
-			 22, 11,  4, 25
-			];
-			
-	var str = '00000000000000000000000000000000';
-	for(var i =0;i<p.length;i++)
-	{
-		str[p[i]-1] = result[i];
-	}
-	return str;
-}
-
 //Final permutation of the whole encryption process.(Inverse Initial Permutation)
 function invInitPerm(str)
 {
@@ -343,11 +322,26 @@ function invInitPerm(str)
 
 
 //implementation.
+var strmes = 'ChriS';
 
-var m = '0123456789ABCDEF';//hexadecimal value
-var key = '133457799BBCDFF1';//hexadecimal value
+var hexstr = string2Hex(strmes);
 
-var binM = hex2Bin(m);
+var messageBin = hex2Bin(hexstr);
+
+if(messageBin.length>64)
+{
+	messageBin = messageBin.substring(0, 64);
+}
+else if(messageBin.length<64)
+{
+	messageBin = padString(messageBin);
+}
+
+var m = '0000000000000000';//hexadecimal value
+var key = '22234512987ABB23';//hexadecimal value
+
+//var binM = hex2Bin(m);
+var binM = messageBin;
 var binKey = hex2Bin(key);
 
 var permcho1 = permutedChoice1(binKey);
@@ -383,13 +377,38 @@ for(var ij=1;ij<=16;ij++)
 	
 	var finalHex = bin2Hex(finalBin);
 	console.log(finalHex);
+	
+	
+var dinitialPerm = initialPermutaion(finalBin);
 
-//console.log(XOR('00001011101011100011101110011110', '01000010010000010101011001001001'));
+var dL = [];
+var dR = [];
+dL.push(dinitialPerm.substring(0, dinitialPerm.length/2));
+dR.push(dinitialPerm.substring(dinitialPerm.length/2, dinitialPerm.length));	
 
-//console.log(finalFInverse('01001001111011110110110111010111'));
+var revKeys = keys;
+revKeys.reverse();
+revKeys.unshift(0);
+//console.log(revKeys);
+for(var k =1; k<=16; k++)
+{
+	var dprevR = dR[k-1];
+	dL.push(dprevR);
+	console.log( 'L' + k + ': ' + bin2Hex(dL[k]));
+	var dexpandedR = expansionFunction(dprevR);
+	var dxorwithkey = XOR(revKeys[k], dexpandedR);
+	var dsboxprocess = fFunction(dxorwithkey);
+	var dfValue = finalFCalculation(dsboxprocess);
+	var dcurrentR = XOR(dL[k-1], dfValue);
+	dR.push(dcurrentR);
+	console.log('R' + k + ': ' +bin2Hex(dR[k]));
+}
 
-//console.log(hex2Bin('42415649'));
-//console.log(hex2Bin('52615649'));
+var drevTwoBlocks = dR[dR.length-1] + dL[dL.length-1];
+var originalBin = invInitPerm(drevTwoBlocks);
+var originalHex = bin2Hex(originalBin);
+console.log(originalHex);
+console.log(hex2String(originalHex));
 
 
 
