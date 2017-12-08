@@ -132,8 +132,7 @@ function iterationLeftShift(){
 }
 
 //provide 56 bit pc1 input. provides a set of keys for each iteration.
-function getAllKeys(key)
-{
+function getAllKeys(key) {
 	var k = [0];
 	var permChoice1 = [key];
 	var leftshifts = iterationLeftShift();
@@ -320,7 +319,73 @@ function invInitPerm(str)
 	return result;
 }
 
+//Get all messages
+function getAllMessages(binM, binKey) {
+    var permcho1 = permutedChoice1(binKey);
 
+    var keys = getAllKeys(permcho1);
+
+    var initialPerm = initialPermutaion(binM);
+
+    var L = [];
+    var R = [];
+    L.push(initialPerm.substring(0, initialPerm.length / 2));
+    R.push(initialPerm.substring(initialPerm.length / 2, initialPerm.length));
+    var messages = [];
+
+    for (var ij = 1; ij <= 16; ij++) {
+        var prevR = R[ij - 1];
+        L.push(prevR);
+        var expandedR = expansionFunction(prevR);
+        var xorwithkey = XOR(keys[ij], expandedR);
+        var sboxprocess = fFunction(xorwithkey);
+        var fValue = finalFCalculation(sboxprocess);
+        var currentR = XOR(L[ij - 1], fValue);
+        R.push(currentR);
+        messages.push(L[ij] + R[ij]);
+    }
+    return messages;
+}
+function get64Bin(literal) {
+    if (literal.length > 64) {
+        return literal.substring(0, 64);
+    }
+    else if (messageBin.length < 64) {
+        return padString(literal);
+    }
+    return literal;
+};
+function encode(binM, binKey) {
+    var permcho1 = permutedChoice1(binKey);
+
+    var keys = getAllKeys(permcho1);
+
+    var initialPerm = initialPermutaion(binM);
+
+    var L = [];
+    var R = [];
+    L.push(initialPerm.substring(0, initialPerm.length / 2));
+    R.push(initialPerm.substring(initialPerm.length / 2, initialPerm.length));
+
+    for (var ij = 1; ij <= 16; ij++) {
+        var prevR = R[ij - 1];
+        L.push(prevR);
+        console.log('L' + ij + ': ' + bin2Hex(L[ij]));
+        var expandedR = expansionFunction(prevR);
+        var xorwithkey = XOR(keys[ij], expandedR);
+        var sboxprocess = fFunction(xorwithkey);
+        var fValue = finalFCalculation(sboxprocess);
+        var currentR = XOR(L[ij - 1], fValue);
+        R.push(currentR);
+        console.log('R' + ij + ': ' + bin2Hex(R[ij]));
+    }
+
+    var revTwoBlocks = R[R.length - 1] + L[L.length - 1];
+
+    var finalBin = invInitPerm(revTwoBlocks);
+
+    return bin2Hex(finalBin);
+}
 //implementation.
 var strmes = 'ChriS';
 
