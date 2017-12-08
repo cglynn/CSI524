@@ -384,7 +384,7 @@ function encode(binM, binKey) {
 
     var finalBin = invInitPerm(revTwoBlocks);
 
-    return bin2Hex(finalBin);
+    return finalBin;
 }
 //implementation.
 var strmes = 'ChriS';
