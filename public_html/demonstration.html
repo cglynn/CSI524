@@ -19,11 +19,12 @@ and open the template in the editor.
                 dataDiv.style.visibility = "visible";
                 removeRows("tblKeys");
                 var data = [];
+                var binM = get64Bin(hex2Bin(string2Hex(txtMessage)));
+                var binK = get64Bin(hex2Bin(string2Hex(txtKey)));
                 if (mode === "encode") {
-                    //data = encode(get64Bin(string2Bin(txtMessage)), get64Bin(string2Bin(txtKey)));
-                    data = encode(get64Bin(string2Bin(txtMessage)), txtKey);
+                    data = encode(binM, binK);
                 } else {
-                    data = decode(txtMessage, get64Bin(string2Bin(txtKey)));
+                    data = decode(txtMessage, binK);
                 }
                 printData(data);
             };

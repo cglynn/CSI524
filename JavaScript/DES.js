@@ -350,7 +350,6 @@ function encode(binM, binKey) {
     for (var ij = 1; ij <= 16; ij++) {
         var prevR = R[ij - 1];
         L.push(prevR);
-        console.log('L' + ij + ': ' + bin2Hex(L[ij]));
         var expandedR = expansionFunction(prevR);
         var xorwithkey = XOR(keys[ij], expandedR);
         var sboxprocess = fFunction(xorwithkey);
@@ -363,7 +362,7 @@ function encode(binM, binKey) {
     var revTwoBlocks = R[R.length - 1] + L[L.length - 1];
 
     var finalBin = invInitPerm(revTwoBlocks);
-    data[4] = bin2Hex(finalBin);
+    data[4] = finalBin;
 
     return data;
 }
@@ -373,14 +372,14 @@ function decode(binC, binKey) {
     var dinitialPerm = initialPermutaion(binC);
     data[2] = dinitialPerm;
 
-    var keys = getAllKeys(binKey);
-
     var dL = [];
     var dR = [];
     dL.push(dinitialPerm.substring(0, dinitialPerm.length / 2));
     dR.push(dinitialPerm.substring(dinitialPerm.length / 2, dinitialPerm.length));
 
-    var revKeys = keys;
+    var permcho1 = permutedChoice1(binKey);
+    data[0] = permcho1;
+    var revKeys = getAllKeys(permcho1);;
     revKeys.reverse();
     revKeys.unshift(0);
     data[1] = revKeys;
@@ -407,7 +406,7 @@ function decode(binC, binKey) {
     return data;
 }
 
-//function implementation() {
+function implementation() {
 //implementation.
     var strmes = 'ChriS';
 
@@ -491,7 +490,7 @@ function decode(binC, binKey) {
     var originalHex = bin2Hex(originalBin);
     console.log(originalHex);
     console.log(hex2String(originalHex));
-//}
+}
 
 
 
