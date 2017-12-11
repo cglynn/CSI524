@@ -18,7 +18,7 @@ and open the template in the editor.
                 var dataDiv = document.getElementById("data");
                 dataDiv.style.visibility = "visible";
                 removeRows("tblKeys");
-                var data = [];
+                var data;
                 var binM = get64Bin(hex2Bin(string2Hex(txtMessage)));
                 var binK = get64Bin(hex2Bin(string2Hex(txtKey)));
                 if (mode === "encode") {
@@ -91,9 +91,9 @@ and open the template in the editor.
        </div>  
         <div id="header">
             <div id="posts">
-                <label style="display: inline-block; width: 130px; text-align: right;">Message/Cipher: </label><input id="txtMessage" type="text" style="display: inline-block; width: 130px;"/>
+                <label style="display: inline-block; width: 140px; text-align: right;">* Message/Cipher: </label><input id="txtMessage" type="text" style="display: inline-block; width: 470px;"/>
                 <br/><br/>
-                <label style="display: inline-block; width: 130px; text-align: right;">Key: </label><input id="txtKey" type="text" style="display: inline-block; width: 130px;"/>
+                <label style="display: inline-block; width: 140px; text-align: right;">* Key: </label><input id="txtKey" type="text" style="display: inline-block; width: 200px;"/>
                 <br/>
                 <input id="btnEncrypt" type="button" value="Encode" onclick="populateValues('encode')"/>
                 <input id="btnDecrypt" type="button" value="Decrypt" onclick="populateValues('decode')" />
@@ -110,6 +110,9 @@ and open the template in the editor.
                     </table>
                     <label>Output: </label><label id="lblOutput"></label>
                 </div>
+                <p>
+                    * Inputs are cutoff at 64 bits.  
+                </p>
             </div>
         </div>
         
