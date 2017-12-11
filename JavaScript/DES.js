@@ -3,10 +3,10 @@
 
 // 'some random string' -> 736f6d652072616e646f6d20737472696e67
 function string2Hex(str){
-	var result = '';
-	for(i=0;i<str.length;i++)
+	var result = "";
+	for(var i=0;i<str.length;i++)
 	{
-		hex = str.charCodeAt(i).toString(16);
+		var hex = str.charCodeAt(i).toString(16);
 		result += (hex).slice(-4);
 	}
 	return result;
@@ -14,8 +14,8 @@ function string2Hex(str){
 
 // 'some random string' -> 011100110110111101101101011001010010000001110010011000010110111001100100011011110110110100100000011100110111010001110010011010010110111001100111
 function string2Bin(str){
-	var result = '';
-	for(i=0;i<str.length;i++)
+	var result = "";
+	for(var i=0;i<str.length;i++)
 	{
 		result += ("0000"+(str[i].charCodeAt(0).toString(2))).slice(-8) + " ";
 	}
@@ -25,7 +25,7 @@ function string2Bin(str){
 // '736f6d652072616e646f6d20737472696e67' -> 011100110110111101101101011001010010000001110010011000010110111001100100011011110110110100100000011100110111010001110010011010010110111001100111
 function hex2Bin(str){
 	var result = '';
-	for(i=0;i<str.length;i++)
+	for(var i=0;i<str.length;i++)
 	{
 		result += ("0000" + (parseInt(str[i], 16)).toString(2)).slice(-4);
 	}
@@ -36,7 +36,7 @@ function hex2Bin(str){
 //011100110110111101101101011001010010000001110010011000010110111001100100011011110110110100100000011100110111010001110010011010010110111001100111 -> 736f6d652072616e646f6d20737472696e67
 function bin2Hex(str){
 	var result = '';
-	for(i=0;i<str.length;i+=4)
+	for(var i=0;i<str.length;i+=4)
 	{
 		result += parseInt(str.substring(i,i+4), 2).toString(16);
 	}
@@ -47,7 +47,7 @@ function bin2Hex(str){
 function hex2String(str)
 {
 	var result = '';
-    for (i = 0; i < str.length; i += 2) {
+    for (var i = 0; i < str.length; i += 2) {
       result += String.fromCharCode(parseInt(str.substr(i, 2), 16));
     }
     return result;
@@ -56,8 +56,8 @@ function hex2String(str)
 //011100110110111101101101011001010010000001110010011000010110111001100100011011110110110100100000011100110111010001110010011010010110111001100111 -> some random string
 function bin2String(str)
 {
-	var result = '';
-	for (i=0;i<str.length;i+=8)
+	var result = "";
+	for (var i=0;i<str.length;i+=8)
 	{
 		result += String.fromCharCode(parseInt(str.substring(i, 8), 2));
 	}
@@ -68,9 +68,9 @@ function bin2String(str)
 function padString(str)
 {
 	var result = str;
-	for(i=0;i<64-str.length;i++)
+	for(var i = 0;i<64-str.length;i++)
 	{
-		result += '0';
+		result += "0";
 	}
 	return result;
 }
@@ -86,8 +86,8 @@ function permutedChoice1(str)
                7, 62, 54, 46, 38, 30, 22,
               14, 6, 61, 53, 45, 37, 29,
               21, 13, 5, 28, 20, 12, 4];
-	var result = '';		  
-	for(i=0;i<pc1.length;i++)
+	var result = "";		  
+	for(var i=0;i<pc1.length;i++)
 	{
 		result += str[pc1[i]-1];
 	}
@@ -116,8 +116,8 @@ function permutedChoice2(str)
                  44, 49, 39, 56, 34, 53,
                  46, 42, 50, 36, 29, 32];
 	
-	var result = '';
-	for(i=0;i<pc2.length;i++)
+	var result = "";
+	for(var i=0;i<pc2.length;i++)
 	{
 		result += str[pc2[i]-1];
 	}
@@ -201,16 +201,16 @@ function XOR(key , expandedRight)
 {
 	//XOR not available in javascript.
 	//layman implementation.
-	result = '';
+	var result = "";
 	for(var i=0; i<key.length;i++)
 	{
-		if(key[i] == expandedRight[i])
+		if(key[i] === expandedRight[i])
 		{
-			result += '0';
+			result += "0";
 		}
 		else
 		{
-			result += '1';
+			result += "1";
 		}
 	}
 	return result;
@@ -221,7 +221,7 @@ function XOR(key , expandedRight)
 //uses the sboxes to calculate the 32-bit output from 48-bit input.
 function fFunction(str)
 {
-	sBox = [
+	var sBox = [
 	  //S1
 	[[14,  4, 13, 1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9, 0,  7],
      [ 0, 15,  7, 4, 14,  2, 13,  1, 10,  6, 12, 11,  9,  5, 3,  8],
@@ -261,9 +261,9 @@ function fFunction(str)
 	[[13,  2,  8, 4,  6, 15, 11,  1, 10,  9,  3, 14,  5,  0, 12,  7],
      [ 1, 15, 13, 8, 10,  3,  7,  4, 12,  5,  6, 11,  0, 14,  9,  2],
      [ 7, 11,  4, 1,  9, 12, 14,  2,  0,  6, 10, 13, 15,  3,  5,  8],
-     [ 2,  1, 14, 7,  4, 10,  8, 13, 15, 12,  9,  0,  3,  5,  6, 11] ],
+     [ 2,  1, 14, 7,  4, 10,  8, 13, 15, 12,  9,  0,  3,  5,  6, 11] ]
 	];
-	result = '';
+	var result = "";
 	for(var i=0;i<sBox.length;i++)
 	{
 		var currentBlock = str.substring(i*6, (i*6)+6);
@@ -318,24 +318,39 @@ function invInitPerm(str)
 	
 	return result;
 }
+//Binary input of any length.
+//Outputs binary 64 length
+function get64Bin(literal) {
+    if (literal.length > 64) {
+        return literal.substring(0, 64);
+    }
+    else if (literal.length < 64) {
+        return padString(literal);
+    }
+    return literal;
+};
 
-//Get all messages
-function getAllMessages(binM, binKey) {
+function encode(binM, binKey) {
+    var data = [];
     var permcho1 = permutedChoice1(binKey);
+    data[0] = permcho1;
 
     var keys = getAllKeys(permcho1);
+    data[1] = keys;
 
     var initialPerm = initialPermutaion(binM);
+    data[2] = initialPerm;
 
     var L = [];
     var R = [];
     L.push(initialPerm.substring(0, initialPerm.length / 2));
     R.push(initialPerm.substring(initialPerm.length / 2, initialPerm.length));
-    var messages = [];
 
+    var messages = [];
     for (var ij = 1; ij <= 16; ij++) {
         var prevR = R[ij - 1];
         L.push(prevR);
+        console.log('L' + ij + ': ' + bin2Hex(L[ij]));
         var expandedR = expansionFunction(prevR);
         var xorwithkey = XOR(keys[ij], expandedR);
         var sboxprocess = fFunction(xorwithkey);
@@ -344,21 +359,80 @@ function getAllMessages(binM, binKey) {
         R.push(currentR);
         messages.push(L[ij] + R[ij]);
     }
-    return messages;
+    data[3] = messages;
+    var revTwoBlocks = R[R.length - 1] + L[L.length - 1];
+
+    var finalBin = invInitPerm(revTwoBlocks);
+    data[4] = bin2Hex(finalBin);
+
+    return data;
 }
-function get64Bin(literal) {
-    if (literal.length > 64) {
-        return literal.substring(0, 64);
+
+function decode(binC, binKey) {
+    var data = [];
+    var dinitialPerm = initialPermutaion(binC);
+    data[2] = dinitialPerm;
+
+    var keys = getAllKeys(binKey);
+
+    var dL = [];
+    var dR = [];
+    dL.push(dinitialPerm.substring(0, dinitialPerm.length / 2));
+    dR.push(dinitialPerm.substring(dinitialPerm.length / 2, dinitialPerm.length));
+
+    var revKeys = keys;
+    revKeys.reverse();
+    revKeys.unshift(0);
+    data[1] = revKeys;
+    var messages = [];
+
+    for (var k = 1; k <= 16; k++) {
+        var dprevR = dR[k - 1];
+        dL.push(dprevR);
+        var dexpandedR = expansionFunction(dprevR);
+        var dxorwithkey = XOR(revKeys[k], dexpandedR);
+        var dsboxprocess = fFunction(dxorwithkey);
+        var dfValue = finalFCalculation(dsboxprocess);
+        var dcurrentR = XOR(dL[k - 1], dfValue);
+        dR.push(dcurrentR);
+        messages.push(dL[k] + dR[k]);
     }
-    else if (messageBin.length < 64) {
-        return padString(literal);
+    data[3] = messages;
+
+    var drevTwoBlocks = dR[dR.length - 1] + dL[dL.length - 1];
+    var originalBin = invInitPerm(drevTwoBlocks);
+    var originalHex = bin2Hex(originalBin);
+    data[4] = hex2String(originalHex);
+
+    return data;
+}
+
+//function implementation() {
+//implementation.
+    var strmes = 'ChriS';
+
+    var hexstr = string2Hex(strmes);
+
+    var messageBin = hex2Bin(hexstr);
+
+    if (messageBin.length > 64) {
+        messageBin = messageBin.substring(0, 64);
+    } else if (messageBin.length < 64) {
+        messageBin = padString(messageBin);
     }
-    return literal;
-};
-function encode(binM, binKey) {
+
+    var m = '0000000000000000'; //hexadecimal value
+    var key = '22234512987ABB23'; //hexadecimal value
+
+//var binM = hex2Bin(m);
+    var binM = messageBin;
+    var binKey = hex2Bin(key);
+
     var permcho1 = permutedChoice1(binKey);
 
     var keys = getAllKeys(permcho1);
+
+//console.log(keys);
 
     var initialPerm = initialPermutaion(binM);
 
@@ -384,96 +458,40 @@ function encode(binM, binKey) {
 
     var finalBin = invInitPerm(revTwoBlocks);
 
-    return finalBin;
-}
-//implementation.
-var strmes = 'ChriS';
+    var finalHex = bin2Hex(finalBin);
+    console.log(finalHex);
 
-var hexstr = string2Hex(strmes);
 
-var messageBin = hex2Bin(hexstr);
+    var dinitialPerm = initialPermutaion(finalBin);
 
-if(messageBin.length>64)
-{
-	messageBin = messageBin.substring(0, 64);
-}
-else if(messageBin.length<64)
-{
-	messageBin = padString(messageBin);
-}
+    var dL = [];
+    var dR = [];
+    dL.push(dinitialPerm.substring(0, dinitialPerm.length / 2));
+    dR.push(dinitialPerm.substring(dinitialPerm.length / 2, dinitialPerm.length));
 
-var m = '0000000000000000';//hexadecimal value
-var key = '22234512987ABB23';//hexadecimal value
-
-//var binM = hex2Bin(m);
-var binM = messageBin;
-var binKey = hex2Bin(key);
-
-var permcho1 = permutedChoice1(binKey);
-
-var keys = getAllKeys(permcho1);
-
-//console.log(keys);
-
-var initialPerm = initialPermutaion(binM);
-
-var L = [];
-var R = [];
-L.push(initialPerm.substring(0, initialPerm.length/2));
-R.push(initialPerm.substring(initialPerm.length/2, initialPerm.length));
-
-for(var ij=1;ij<=16;ij++)
-{
-	var prevR = R[ij-1];
-	L.push(prevR);
-	console.log( 'L' + ij + ': ' + bin2Hex(L[ij]));
-	var expandedR = expansionFunction(prevR);
-	var xorwithkey = XOR(keys[ij], expandedR);
-	var sboxprocess = fFunction(xorwithkey);
-	var fValue = finalFCalculation(sboxprocess);
-	var currentR = XOR(L[ij-1], fValue);
-	R.push(currentR);
-	console.log('R' + ij + ': ' +bin2Hex(R[ij]));
-}
-
-	var revTwoBlocks = R[R.length-1] + L[L.length-1];
-	
-	var finalBin = invInitPerm(revTwoBlocks);
-	
-	var finalHex = bin2Hex(finalBin);
-	console.log(finalHex);
-	
-	
-var dinitialPerm = initialPermutaion(finalBin);
-
-var dL = [];
-var dR = [];
-dL.push(dinitialPerm.substring(0, dinitialPerm.length/2));
-dR.push(dinitialPerm.substring(dinitialPerm.length/2, dinitialPerm.length));	
-
-var revKeys = keys;
-revKeys.reverse();
-revKeys.unshift(0);
+    var revKeys = keys;
+    revKeys.reverse();
+    revKeys.unshift(0);
 //console.log(revKeys);
-for(var k =1; k<=16; k++)
-{
-	var dprevR = dR[k-1];
-	dL.push(dprevR);
-	console.log( 'L' + k + ': ' + bin2Hex(dL[k]));
-	var dexpandedR = expansionFunction(dprevR);
-	var dxorwithkey = XOR(revKeys[k], dexpandedR);
-	var dsboxprocess = fFunction(dxorwithkey);
-	var dfValue = finalFCalculation(dsboxprocess);
-	var dcurrentR = XOR(dL[k-1], dfValue);
-	dR.push(dcurrentR);
-	console.log('R' + k + ': ' +bin2Hex(dR[k]));
-}
+    for (var k = 1; k <= 16; k++) {
+        var dprevR = dR[k - 1];
+        dL.push(dprevR);
+        console.log('L' + k + ': ' + bin2Hex(dL[k]));
+        var dexpandedR = expansionFunction(dprevR);
+        var dxorwithkey = XOR(revKeys[k], dexpandedR);
+        var dsboxprocess = fFunction(dxorwithkey);
+        var dfValue = finalFCalculation(dsboxprocess);
+        var dcurrentR = XOR(dL[k - 1], dfValue);
+        dR.push(dcurrentR);
+        console.log('R' + k + ': ' + bin2Hex(dR[k]));
+    }
 
-var drevTwoBlocks = dR[dR.length-1] + dL[dL.length-1];
-var originalBin = invInitPerm(drevTwoBlocks);
-var originalHex = bin2Hex(originalBin);
-console.log(originalHex);
-console.log(hex2String(originalHex));
+    var drevTwoBlocks = dR[dR.length - 1] + dL[dL.length - 1];
+    var originalBin = invInitPerm(drevTwoBlocks);
+    var originalHex = bin2Hex(originalBin);
+    console.log(originalHex);
+    console.log(hex2String(originalHex));
+//}
 
 
 

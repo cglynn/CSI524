@@ -12,13 +12,20 @@ and open the template in the editor.
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
         <script src="../JavaScript/DES.js"></script>
         <script language="javascript">
-            function populateValues() {
+            function populateValues(mode) {
                 var txtMessage = document.getElementById("txtMessage").value;
                 var txtKey = document.getElementById("txtKey").value;
                 var dataDiv = document.getElementById("data");
                 dataDiv.style.visibility = "visible";
                 removeRows("tblKeys");
-                printData(txtKey, txtMessage);
+                var data = [];
+                if (mode === "encode") {
+                    //data = encode(get64Bin(string2Bin(txtMessage)), get64Bin(string2Bin(txtKey)));
+                    data = encode(get64Bin(string2Bin(txtMessage)), txtKey);
+                } else {
+                    data = decode(txtMessage, get64Bin(string2Bin(txtKey)));
+                }
+                printData(data);
             };
 
             function removeRows(tblName) {
@@ -30,35 +37,32 @@ and open the template in the editor.
                 }
             }
 
-            function printData(txtKey, txtMessage) {
-                var binKey = get64Bin(string2Bin(txtKey));
-                var binMessage = get64Bin(string2Bin(txtMessage));
-                var permcho1 = permutedChoice1(binKey);
-                var keysArray = getAllKeys(permcho1);
-                var messagesArray = getAllMessages(binMessage, binKey);
-                
+            function printData(data) {
                 var lblKeyPermutation1 = document.getElementById("keyPermutation1");
-                lblKeyPermutation1.innerHTML = permcho1;
+                lblKeyPermutation1.innerHTML = data[0];
 
                 var lblMessageInitialPermutation = document.getElementById("messageInitialPermutation");
-                lblMessageInitialPermutation.innerHTML = initialPermutaion(binMessage);
+                lblMessageInitialPermutation.innerHTML = data[2];
 
                 var lblOutput = document.getElementById("lblOutput");
-                lblOutput.innerHTML = encode(binMessage, binKey);
+                lblOutput.innerHTML = data[4];
 
+                var keysArray = data[1];
+                var messagesArray = data[3];
                 for (var i = 0, len = keysArray.length; i < len -1; i++) {
+                    if (keysArray[i + 1] !== 0) {
+                        var row = addNewRow("tblKeys");
 
-                    var row = addNewRow("tblKeys");
+                        // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+                        var cell1 = row.insertCell(0);
+                        var cell2 = row.insertCell(1);
+                        var cell3 = row.insertCell(2);
 
-                    // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-                    var cell1 = row.insertCell(0);
-                    var cell2 = row.insertCell(1);
-                    var cell3 = row.insertCell(2);
-
-                    // Add some text to the new cells:
-                    cell1.innerHTML = i + 1;
-                    cell2.innerHTML = keysArray[i + 1];
-                    cell3.innerHTML = messagesArray[i];
+                        // Add some text to the new cells:
+                        cell1.innerHTML = i + 1;
+                        cell2.innerHTML = keysArray[i + 1];
+                        cell3.innerHTML = messagesArray[i];
+                    }
                 };
 
                 function addNewRow(tableName) {
@@ -86,11 +90,12 @@ and open the template in the editor.
        </div>  
         <div id="header">
             <div id="posts">
-                <label width="100">Message </label><input id="txtMessage" type="text" width="100"/>
+                <label style="display: inline-block; width: 130px; text-align: right;">Message/Cipher: </label><input id="txtMessage" type="text" style="display: inline-block; width: 130px;"/>
+                <br/><br/>
+                <label style="display: inline-block; width: 130px; text-align: right;">Key: </label><input id="txtKey" type="text" style="display: inline-block; width: 130px;"/>
                 <br/>
-                <label width="100">Key </label><input id="txtKey" type="text" width="100"/>
-                <br/>
-                <input id="btnEncrypt" type="button" value="Encode" onclick="populateValues()"/>
+                <input id="btnEncrypt" type="button" value="Encode" onclick="populateValues('encode')"/>
+                <input id="btnDecrypt" type="button" value="Decrypt" onclick="populateValues('decode')" />
                 <div id="data" style="visibility: hidden">
                     <label>Key Permutation One: </label> <label id="keyPermutation1"></label>
                     <br/>
