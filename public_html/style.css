@@ -22,6 +22,7 @@ body{
     line-height: 70px;
     background: #000;
     padding-bottom: 5px; 
+	padding-top: -15px;
 }
 
 #nav1 h1{
@@ -61,11 +62,11 @@ body{
 
 #header{
     width: 100%;
-    height: 900px;
+    height: 5700px;
     background-color: #000;
     background-image: url("iris-recognition-cryptography.JPG");
     background-size: 100%;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     background-position: top;
     padding-right: 30px;
     padding-left: 140px;
@@ -75,16 +76,31 @@ body{
 }
 
 #posts{
-    padding: 10px;
+    padding: 20px;
     width: 1200px;
-    height: 820px;
+    height: 5300px;
     background-color: #000;
     border: 1px solid black;
     opacity: 0.8;
     filter: alpha(opacity=60);  /* For IE8 and earlier */
     color: white;
-    
-    
+    text-align:justify;
+    margin-bottom: 10px;
+     
+}
+
+#posts img{
+    display: block;
+    margin: auto;
+    width: auto;
+    height: auto;
+    background: white;
+    opacity: 1.0;
+}
+
+.sub {
+    vertical-align: sub;
+    font-size: smaller;
 }
 
 
@@ -92,6 +108,7 @@ body{
 
 
 #footer{
+    margin-top: 10px;
     background-color: #000;
     width: 100%;
     height: 80px;
