@@ -19,7 +19,7 @@ and open the template in the editor.
                 <li><a href="demonstration.html"> Demonstration </a></li>
                 <li><a href="aboutus.html"> About Us </a></li>              
             </ul>
-            
+            s
        </div>  
         <div id="header">
             <div id="posts">
@@ -30,8 +30,65 @@ and open the template in the editor.
             <p>In this paper, we discuss an implementation of creating an accessible website to teach how the DES, Data Encryption Standard, algorithm works.  The website it intended for anyone with an interest in cryptography or more specifically the DES encryption.</p>
             <p>Cryptography is a very intricate subject.  Learning cryptography methods can be difficult.  This difficulty is inherent in the subject.  The more an encryption algorithm encrypts the data the harder it is for an attacker to crack the encryption. DES, Data Encryption Standard, algorithm is no exception.</p>
             <br>
-            <h2>What is DES?</h2>
-            <p>The DES Algorithm contains sixteen rounds, each round using the output from the previous round.  In each round there are multiple permutations utilized.  The website will increase the ease of learning the DES algorithm</p> 
+            <h2>How Does DES Work? - An Overview</h2>
+            <p>DES is a block cipher--meaning it operates on plaintext blocks of a given size (64-bits) and returns ciphertext blocks of the same size. Thus DES results in a permutation among the 2<sup>64</sup> possible arrangements of 64 bits, each of which may be either 0 or 1. 
+                This is the entire vision of the DES process: </p> 
+            <img src="desvision.jpg" alt="DES Overview" style="width:800px;height:450px;"> 
+            <br>
+            <p>The plaintext goes through a process called Initial Permutation, and after that it is splits into two 32-bits blocks, a left and a right one.  Both of these parts then enter the internal processing box (sandbox), marked with an X in the figure.
+                What happens inside the X can be divided into multiple parts:</p>
+            <ul> 
+                <li>The iterations;</li>
+                <li>The key-distribution box;</li>
+                <li>The f-function;</li>
+                <li>And the S-box.</li>
+            </ul>
+            <p> This is the vision of the insides of the X-Box:</p>
+            <img src="xboxvision.jpg" alt="X-Box Overview" style="width:800px;height:450px;">
+            <br>
+            <h3> 1.	The iterations</h3>
+            <p> The iterations are divided into 16 rounds, each of them have the same process, and they work consecutively; which means, the result of the first one will be used as data for the second one, and from then on, until the 15th result will be used as data for the 16th round. The result from the 16th box will be two 32-bit strings, which will be swapped and concatenated, and then go through a Final Permutation, which is the (Initial Permutation)-1. Inside this process, we see that each side of the block is a result of:
+            </p><p><b>L<sub>n</sub> = R<sub>n-1</sub></b> </p>
+            <p><b>R<sub>n</sub> = L<sub>n-1</sub> XOR f(R<sub>n-1</sub>,K<sub>n</sub>)</b></p>
+                <p>With L being the Left-Side, R being the Right-Side, f being the F-Function, and K is the Key.
+            </p>
+            <h3>2.	The key-distribution box</h3>
+                <p>The DES receives a key input of 64 bits, and puts that through a PC-1 table, which permutates it, and transforms it into 56 bit key.
+            </p>
+            <img src="pc1.jpg" alt="PC-1 Table" style="float: none; width:550px;height:400px;"> 
+            <p>Then, the key is split into left and right halves, each containing 28 bits. Each half goes through a left-shit, meaning that the last bit goes to the first position, and all the other take a “step” to the left, except for the one that was just moved. Each iteration follows the schedule, to know how many left-shifts it has to perform.</p>
+            <img src="leftshift.jpg" alt="Left-Shift Table" style="width:350px;height:500px;"> 
+            <p>After both sides went through all iterations of left-shifts, they are concatenated again, and the 56-bit key goes through a second permutation table, called PC-2, like the one that follows, resulting in a 48-bit key, which will be distributed to each of the 16 rounds, and used inside the f-functions.</p>
+            <img src="pc2.jpg" alt="PC-2 Table" style="width:500px;height:400px;">
+            <h3>3.	The F-Function</h3>
+                <p>The F-Function is a major step inside each round of the process. This function receives the right-side block Rn-1, which is 32-bits long, and expand it to 48-bits, using the E Bit-Selection Table:
+            </p>
+            <img src="ebit.jpg" alt="E Bit-Selection Table" style="width:500px;height:400px;">
+            <p>When it finishes expanding it, the string is finally able to go through a XOR operation with the key Kn, received through the key-distribution box, which also has a 48-bit length. The result of this operation will be put through a condensing permutation, that will transform it from a 48-bit length to a 32-bit length. The permutation is based on the S-Box tables, and it is applies to each group of 6-bits.
+            <br>After this condensing is done, the 32-bit message will go through another permutation, this time based on the following P-Table:
+            </p>
+            <img src="ptable.jpg" alt="P Table" style="width:350px;height:400px;">
+            <p>This result marks the end of the f-function, and it will go through another XOR operation with the Left-Side block, as it was specified in the iterations explanation.</p>
+            <h3>4.	The S-Box</h3>
+            <p>
+                The S-box is nothing more than the table used as a base for the condensation of the 48-bit string into a 32-bit one. So, the box will receive the 48-bit message, divided into 6-bits blocks.
+                Each block will indicate the row and the column to be read on the table, and the indicated number will replace the 6-bits.<br>
+                For example, the s-box receives the 6-bit block <b>011000<sub>2</sub></b>.<br>
+                The first and the last bits will indicate the row to be read, so
+                <b>0</b>1100<b>0</b>, the row will be 00<sub>2</sub>, which is 0<sub>10</sub>.<br>
+                Next, the four middle bits will indicate the column to be read:
+                0<b>1100</b>0, the line will be 1100<sub>2</sub>, which is 12<sub>10</sub>. <br>
+                So the S-Box will read the number contained into S<sub>1</sub> (0, 12), and replace first group of bits, 011000.
+             </p>
+             <img src="s1table.jpg" alt="S-1 Table" style="width:800px;height:250px;">
+             <p>In this example, S<sub>1</sub>(0, 12) = 5<sub>10</sub> = 0101<sub>2</sub>. So, in the final message to be sent back to the f-function, 011000 would be replaced by 0101.</p>
+             <br>
+             <h2>Conclusion</h2>
+             <p>In conclusion, what happens in DES is basically: <br>
+				The user inputs a plaintext with 64-bits length, and a key, also 64-bits length. Inside the system, the plaintext is divided into two sides (left and right), both of 32-bits length;
+				<br> Before being divided, the text goes through a Initial Permutation, and after that goes inside the sandbox, where it goes through a process of encryption with the inputed key, that has also been through a process of its own;
+				<br> After being put through 16 different permutation process, the left and right side of the encrypted text are reversed, concatenated and permuted again, and gets out of the sandbox, as a single string of characters, and 64-bit long.
+				<br> By the end, the string is put through a Final Permutation, which is the opposite of the Initial Permutation, and the user gets the outputted cyphertext, which is 64-bit long.</p>
             </div>
         </div>
         
