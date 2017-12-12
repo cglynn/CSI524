@@ -114,13 +114,16 @@ and open the template in the editor.
        </div>  
         <div id="header">
             <div id="posts">
-                <label style="display: inline-block; width: 140px; text-align: right;">* Message/Cipher: </label><input id="txtMessage" type="text" style="display: inline-block; width: 470px;"/>
+                <label style="display: inline-block; width: 140px; text-align: right;">* Message/Cipher: </label><input id="txtMessage" type="text" style="display: inline-block; width: 80%;"/>
                 <br/><br/>
                 <label style="display: inline-block; width: 140px; text-align: right;">* Key: </label><input id="txtKey" type="text" style="display: inline-block; width: 200px;"/>
                 <br/>
                 <input id="btnEncrypt" type="button" value="Encode" onclick="populateValues('encode')"/>
                 <input id="btnDecrypt" type="button" value="Decode" onclick="populateValues('decode')" />
                 <div id="data" style="visibility: hidden">
+                    <p>
+                        <label>Final Output: </label><label id="lblFinalOutput"></label>
+                    </p>
                     <table id="tblKeys" style="width: 100%;">
                         <tr >
                             <td >Round</td>
@@ -128,10 +131,9 @@ and open the template in the editor.
                             <td >Message</td>
                         </tr>
                     </table>
-                    <label>Final Output: </label><label id="lblFinalOutput"></label>
                 </div>
                 <p>
-                    * Message and Key are strings.  Cipher input in 64 Bit format.  
+                    * Message and Key are strings.  Cipher input in 64 Bit format. Only first 64 bits of the key are used. 
                 </p>
             </div>
         </div>
