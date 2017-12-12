@@ -320,94 +320,228 @@ function invInitPerm(str)
 }
 //Binary input of any length.
 //Outputs binary 64 length
-function get64Bin(literal) {
-    if (literal.length > 64) {
-        return literal.substring(0, 64);
-    }
-    else if (literal.length < 64) {
-        return padString(literal);
-    }
-    return literal;
-};
+//function get64Bin(literal) {
+//    if (literal.length > 64) {
+//        return literal.substring(0, 64);
+//    }
+//    else if (literal.length < 64) {
+//        return padString(literal);
+//    }
+//    return literal;
+//};
 
-function encode(binM, binKey) {
-    var data = [];
-    var permcho1 = permutedChoice1(binKey);
-    data[0] = permcho1;
+//function encode(binM, binKey) {
+//    var data = [];
+//    var permcho1 = permutedChoice1(binKey);
+//    data[0] = permcho1;
 
-    var keys = getAllKeys(permcho1);
-    data[1] = keys;
+//    var keys = getAllKeys(permcho1);
+//    data[1] = keys;
 
-    var initialPerm = initialPermutaion(binM);
-    data[2] = initialPerm;
+//    var initialPerm = initialPermutaion(binM);
+//    data[2] = initialPerm;
 
-    var L = [];
-    var R = [];
-    L.push(initialPerm.substring(0, initialPerm.length / 2));
-    R.push(initialPerm.substring(initialPerm.length / 2, initialPerm.length));
+//    var L = [];
+//    var R = [];
+//    L.push(initialPerm.substring(0, initialPerm.length / 2));
+//    R.push(initialPerm.substring(initialPerm.length / 2, initialPerm.length));
 
-    var messages = [];
-    for (var ij = 1; ij <= 16; ij++) {
-        var prevR = R[ij - 1];
-        L.push(prevR);
-        var expandedR = expansionFunction(prevR);
-        var xorwithkey = XOR(keys[ij], expandedR);
-        var sboxprocess = fFunction(xorwithkey);
-        var fValue = finalFCalculation(sboxprocess);
-        var currentR = XOR(L[ij - 1], fValue);
-        R.push(currentR);
-        messages.push(L[ij] + R[ij]);
-    }
-    data[3] = messages;
-    var revTwoBlocks = R[R.length - 1] + L[L.length - 1];
+//    var messages = [];
+//    for (var ij = 1; ij <= 16; ij++) {
+//        var prevR = R[ij - 1];
+//        L.push(prevR);
+//        var expandedR = expansionFunction(prevR);
+//        var xorwithkey = XOR(keys[ij], expandedR);
+//        var sboxprocess = fFunction(xorwithkey);
+//        var fValue = finalFCalculation(sboxprocess);
+//        var currentR = XOR(L[ij - 1], fValue);
+//        R.push(currentR);
+//        messages.push(L[ij] + R[ij]);
+//    }
+//    data[3] = messages;
+//    var revTwoBlocks = R[R.length - 1] + L[L.length - 1];
 
-    var finalBin = invInitPerm(revTwoBlocks);
-    data[4] = finalBin;
+//    var finalBin = invInitPerm(revTwoBlocks);
+//    data[4] = finalBin;
 
-    return data;
+//    return data;
+//}
+
+//function decode(binC, binKey) {
+//    var data = [];
+//    var dinitialPerm = initialPermutaion(binC);
+//    data[2] = dinitialPerm;
+
+//    var dL = [];
+//    var dR = [];
+//    dL.push(dinitialPerm.substring(0, dinitialPerm.length / 2));
+//    dR.push(dinitialPerm.substring(dinitialPerm.length / 2, dinitialPerm.length));
+
+//    var permcho1 = permutedChoice1(binKey);
+//    data[0] = permcho1;
+//    var revKeys = getAllKeys(permcho1);;
+//    revKeys.reverse();
+//    revKeys.unshift(0);
+//    data[1] = revKeys;
+//    var messages = [];
+
+//    for (var k = 1; k <= 16; k++) {
+//        var dprevR = dR[k - 1];
+//        dL.push(dprevR);
+//        var dexpandedR = expansionFunction(dprevR);
+//        var dxorwithkey = XOR(revKeys[k], dexpandedR);
+//        var dsboxprocess = fFunction(dxorwithkey);
+//        var dfValue = finalFCalculation(dsboxprocess);
+//        var dcurrentR = XOR(dL[k - 1], dfValue);
+//        dR.push(dcurrentR);
+//        messages.push(dL[k] + dR[k]);
+//    }
+//    data[3] = messages;
+
+//    var drevTwoBlocks = dR[dR.length - 1] + dL[dL.length - 1];
+//    var originalBin = invInitPerm(drevTwoBlocks);
+//    var originalHex = bin2Hex(originalBin);
+//    data[4] = hex2String(originalHex);
+
+//    return data;
+//}
+
+//Encrypts the whole given string.
+function EncryptAll(message, key)
+{
+	//var currentHead;
+	var data1 = [];
+	var hexstr = string2Hex(message);
+	var fullmessageBin = hex2Bin(hexstr);
+	var fullFinalBin = "";
+	
+	var hexkey = string2Hex(key);
+		var binKey = hex2Bin(hexkey);
+		if(binKey.length>64)
+		{
+			binKey = binKey.substring(0, 64);
+		}
+		else if(binKey.length<64)
+		{
+			binKey = padString(binKey);
+		}
+	var permcho1 = permutedChoice1(binKey);	
+	var keys = getAllKeys(permcho1);
+	
+	fullmessageBin = fullmessageBin.match(/.{1,64}/g);
+	for(var i=0;i<fullmessageBin.length;i++)
+	{
+		var data = [];
+		data.push(permcho1);
+		data.push(keys);
+		var messageBin = fullmessageBin[i];
+		if(messageBin.length<64)
+		{
+			messageBin = padString(messageBin);
+		}
+		var binM = messageBin;
+
+		var initialPerm = initialPermutaion(binM);
+		data.push(initialPerm);
+		var L = [];
+		var R = [];
+		L.push(initialPerm.substring(0, initialPerm.length/2));
+		R.push(initialPerm.substring(initialPerm.length/2, initialPerm.length));
+		var rounds = [];
+		for(var ij=1;ij<=16;ij++)
+		{
+			var prevR = R[ij-1];
+			L.push(prevR);
+			var expandedR = expansionFunction(prevR);
+			var xorwithkey = XOR(keys[ij], expandedR);
+			var sboxprocess = fFunction(xorwithkey);
+			var fValue = finalFCalculation(sboxprocess);
+			var currentR = XOR(L[ij-1], fValue);
+			R.push(currentR);
+			rounds.push(L[ij] + R[ij]);
+		}
+		data.push(rounds);
+		var revTwoBlocks = R[R.length-1] + L[L.length-1];
+		
+		fullFinalBin += invInitPerm(revTwoBlocks);
+		data.push(invInitPerm(revTwoBlocks));
+		data1.push(data);
+	}
+	var finalHex = bin2Hex(fullFinalBin);
+	data1.push(finalHex);
+	console.log(data1);
+	return data1;
 }
 
-function decode(binC, binKey) {
-    var data = [];
-    var dinitialPerm = initialPermutaion(binC);
-    data[2] = dinitialPerm;
 
-    var dL = [];
-    var dR = [];
-    dL.push(dinitialPerm.substring(0, dinitialPerm.length / 2));
-    dR.push(dinitialPerm.substring(dinitialPerm.length / 2, dinitialPerm.length));
-
-    var permcho1 = permutedChoice1(binKey);
-    data[0] = permcho1;
-    var revKeys = getAllKeys(permcho1);;
-    revKeys.reverse();
-    revKeys.unshift(0);
-    data[1] = revKeys;
-    var messages = [];
-
-    for (var k = 1; k <= 16; k++) {
-        var dprevR = dR[k - 1];
-        dL.push(dprevR);
-        var dexpandedR = expansionFunction(dprevR);
-        var dxorwithkey = XOR(revKeys[k], dexpandedR);
-        var dsboxprocess = fFunction(dxorwithkey);
-        var dfValue = finalFCalculation(dsboxprocess);
-        var dcurrentR = XOR(dL[k - 1], dfValue);
-        dR.push(dcurrentR);
-        messages.push(dL[k] + dR[k]);
-    }
-    data[3] = messages;
-
-    var drevTwoBlocks = dR[dR.length - 1] + dL[dL.length - 1];
-    var originalBin = invInitPerm(drevTwoBlocks);
-    var originalHex = bin2Hex(originalBin);
-    data[4] = hex2String(originalHex);
-
-    return data;
+//Decrypts the whole given string.
+function DecryptAll(cipherText, key)
+{
+	var data1 = [];
+	var fullCipherBin = hex2Bin(cipherText);
+	fullCipherBin = fullCipherBin.match(/.{1,64}/g);
+	var fullOriginalBin = "";
+	
+	var hexkey = string2Hex(key);
+	var binKey = hex2Bin(hexkey);
+	if(binKey.length>64)
+	{
+		binKey = binKey.substring(0, 64);
+	}
+	else if(binKey.length<64)
+	{
+		binKey = padString(binKey);
+	}
+	var permcho1 = permutedChoice1(binKey);
+	var keys = getAllKeys(permcho1);
+	var revKeys = keys;
+	revKeys.reverse();
+	revKeys.unshift(0);
+	
+	for(var i=0;i<fullCipherBin.length;i++)
+	{
+		var data = [];
+		data.push(permcho1);
+		data.push(revKeys);
+		var cipherBin = fullCipherBin[i];
+		if(cipherBin.length<64)
+		{
+			cipherBin = padString(cipherBin);
+		}
+		var dinitialPerm = initialPermutaion(cipherBin);
+	    data.push(dinitialPerm);
+		var dL = [];
+		var dR = [];
+		dL.push(dinitialPerm.substring(0, dinitialPerm.length/2));
+		dR.push(dinitialPerm.substring(dinitialPerm.length/2, dinitialPerm.length));
+		var rounds = [];
+		for(var k =1; k<=16; k++)
+		{
+			var dprevR = dR[k-1];
+			dL.push(dprevR);
+			var dexpandedR = expansionFunction(dprevR);
+			var dxorwithkey = XOR(revKeys[k], dexpandedR);
+			var dsboxprocess = fFunction(dxorwithkey);
+			var dfValue = finalFCalculation(dsboxprocess);
+			var dcurrentR	 = XOR(dL[k-1], dfValue);
+			dR.push(dcurrentR);
+			rounds.push(dL[k] + dR[k]);
+		}
+		data.push(rounds);
+		var drevTwoBlocks = dR[dR.length-1] + dL[dL.length-1];
+		fullOriginalBin += invInitPerm(drevTwoBlocks);
+		data.push(invInitPerm(drevTwoBlocks));
+		data1.push(data);
+	}
+	
+	var originalHex = bin2Hex(fullOriginalBin);
+	data1.push(hex2String(originalHex));
+	console.log(data1);
+    return data1;
 }
 
+//Implementation for testing
 function implementation() {
-//implementation.
     var strmes = 'ChriS';
 
     var hexstr = string2Hex(strmes);
